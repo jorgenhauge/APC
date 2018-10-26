@@ -64,9 +64,6 @@ class APCFactory:
     def build(self, host, user, password, verbose, quiet, cli):
         self.quiet = quiet
 
-        self.lock = APCLock(quiet)
-        self.lock.lock()
-
         self.info('Connecting to APC @ %s' % host)
         if cli == '':
             commandline = 'telnet %s' % host
@@ -106,7 +103,6 @@ class APCFactory:
 
         apc.child = child
         apc.version = version
-        apc.lock = self.lock
 
         return apc
 
@@ -228,7 +224,6 @@ class AbstractAPC:
             print('[%s]' % ''.join(self.child.readlines()))
 
         self.child.close()
-        self.lock.unlock()
 
     def control_outlet(self, outlet):
         raise NotImplementedError()
